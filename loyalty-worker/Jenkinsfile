@@ -1,0 +1,96 @@
+pipeline {
+	
+	agent any
+
+	environment {
+          TEAM = 'Lateblumer88'
+          PROJECT = 'yoyowallet-devops-interview'
+          VERSION = '1.0.0'
+    }
+    
+	stages {
+		
+		stage ('Checkout') {
+			steps {
+				checkout([
+					$class: 'GitSCM',
+					branches: [[name: "*/release/${env.VERSION}"]],
+					doGenerateSubmoduleConfigurations: false, 
+					extensions: [[$class: 'LocalBranch']], 
+					submoduleCfg: [], 
+					userRemoteConfigs: [[credentialsId: 'mobimove-jenkins', url: "git@bitbucket.org:${env.TEAM}/${env.PROJECT}.git"]]
+              ])
+			}
+		}
+		
+		stage ('Build') {
+			steps {
+				script {
+					  def pom = readMavenPom file: 'pom.xml'
+					  env.POM_VERSION = pom.getVersion()
+                }
+                script {
+					def creds_ids = ["mobimove-jenkins"]
+					sshagent (creds_ids) {
+						sh '''
+							echo "Building the project"
+							git config push.default simple
+						   	git config --global user.email "jenkins@wearemobimove.com"
+						  	git config --global user.name "Jenkins"
+							mvn clean package
+						'''
+					      
+						if (params.TAG_RELEASE) {
+							sh "git status&&git checkout -b master origin/master&&git fetch&&git pull&&git merge release/${env.VERSION} && git push origin master &&git tag ${env.POM_VERSION}&&git push origin ${env.POM_VERSION}&&git checkout release/${env.VERSION}"
+						}  	
+					      
+				      	def newVersionS = env.POM_VERSION.toString().split('\\.')
+				      	newVersionS[-1] = newVersionS[-1].toInteger()+1
+				      	env.newVersion = newVersionS.join(".")
+				      	
+				      	sh "mvn versions:set -DnewVersion=${env.newVersion}"
+				      	sh "find . -type f  -name 'pom.xml' -exec git add {} \\;"
+				      	sh "git commit -m 'Next Development version' && git push origin release/${env.VERSION}"
+				      	
+				      	sh "git checkout -b develop origin/develop"
+				      	sh "git merge release/${env.VERSION} && git push origin develop"
+					}
+				}
+			}
+		}
+		
+     	stage ('Deploy') {
+        	steps {
+				script {
+					if (params.DEPLOY_TO_PHONGPHONG) {
+						def creds_ids = ["mobimove-jenkins"]
+						sshagent (creds_ids) {
+							sh "scp -v -o StrictHostKeyChecking=no -P 8888 target/${env.PROJECT}-${env.POM_VERSION}.jar deployment@88.80.189.251:~/"
+						}
+					}
+					if (params.DEPLOY_TO_MM_PROD) {
+						def creds_ids = ["mobimove-jenkins"]
+						sshagent (creds_ids) {
+							// sh "scp -v -o StrictHostKeyChecking=no target/${env.PROJECT}-${env.POM_VERSION}.jar deployment@34.240.178.35:~/"
+							sh "scp -v -o StrictHostKeyChecking=no target/${env.PROJECT}-${env.POM_VERSION}.jar deployment@34.241.35.225:~/"
+							sh "scp -v -o StrictHostKeyChecking=no target/${env.PROJECT}-${env.POM_VERSION}.jar deployment@34.252.5.168:~/"
+						}
+					}
+				}
+			}
+		}
+		
+	}
+	
+	post {
+		success {
+			slackSend (color: '#00FF00', message: """BUILD SUCCESSFUL: ${env.PROJECT}-${env.POM_VERSION}
+               	(${env.BUILD_URL})
+               	cd /opt/microservices/deployments; sudo mv /home/deployment/${env.PROJECT}-${env.POM_VERSION}.jar .; sudo rm ${env.PROJECT}.jar; sudo ln -s ${env.PROJECT}-${env.POM_VERSION}.jar ${env.PROJECT}.jar;
+               	""")
+		}
+		failure {
+               slackSend (color: '#FF0000', message: "BUILD FAILED: ${env.PROJECT}-${env.POM_VERSION} (${env.BUILD_URL})")
+		}
+	}
+}
