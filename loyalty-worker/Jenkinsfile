@@ -29,7 +29,7 @@ pipeline {
 
                  script {
 				
-                     sh "docker build -t loyalty-worker ."
+                     sh "docker build . -t loyalty-worker -f /loyalty-worker/Dockerfile"
                      //sh "docker run -d --link cfao_core_services --name cfao_cms -p 8431:8431 cfao_cms"
 
 				}

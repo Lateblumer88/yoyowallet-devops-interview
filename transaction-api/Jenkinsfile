@@ -31,7 +31,7 @@ pipeline {
 
                  script {
 				
-                     sh "docker build -t transaction-api ."
+                     sh "docker build . -t transaction-api -f /transaction-api/Dockerfile"
                      //sh "docker run -d --link cfao_core_services --name cfao_cms -p 8431:8431 cfao_cms"
 
 				}
