@@ -32,6 +32,7 @@ pipeline {
 
                  script {
 				
+                     sh "pwd"
                      sh "docker build . -t auth-api -f /auth-api/Dockerfile"
                      //sh "docker run -d --link cfao_core_services --name cfao_cms -p 8431:8431 cfao_cms"
 
