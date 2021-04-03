@@ -32,10 +32,10 @@ pipeline {
 
                  script {
 				
-                     sh "pwd"
-                     sh " cd /var/lib/jenkins/workspace/YOYO-devops-interview-auth-api/"
-                     sh "ls"
-                     //sh "docker build . -t auth-api -f /var/lib/jenkins/workspace/YOYO-devops-interview-auth-api/devops-interview/auth-api/Dockerfile"
+                     //sh "pwd"
+                    //  sh " cd /var/lib/jenkins/workspace/YOYO-devops-interview-auth-api/"
+                    //  sh "ls"
+                     sh "docker build . -t auth-api -f /var/lib/jenkins/workspace/YOYO-devops-interview-auth-api/auth-api/Dockerfile"
                      //sh "docker run -d --link cfao_core_services --name cfao_cms -p 8431:8431 cfao_cms"
 
 				}
