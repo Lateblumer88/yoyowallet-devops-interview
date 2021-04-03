@@ -32,7 +32,7 @@ pipeline {
 
                  script {
 				
-                sh " cd /var/lib/jenkins/workspace/YOYO-devops-interview-auth-api/"
+                sh " cd /var/lib/jenkins/workspace/YOYO-devops-interview-auth-api/auth-api/"
                 sh "ls"
                 sh "docker build -t auth-api ."
                      //sh "pwd"
