@@ -1,4 +1,4 @@
-FROM python
+FROM python:3.6.9
 RUN python3 -m pip install --upgrade pip
 RUN python -m pip install --upgrade pip
 RUN pwd
