@@ -6,4 +6,4 @@ COPY **/*run.py ./
 RUN pip3 install -r ./requirements.txt
 RUN export HTTP_PORT=5000
 RUN export JWT_SECRET=supersecret
-CMD ["python","run.py"]
+CMD ["python3","run.py"]
