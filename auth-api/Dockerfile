@@ -1,5 +1,5 @@
 FROM python:3.6.1-alpine
-WORKDIR /usr/src/app
+#WORKDIR /usr/src/app
 #ADD . /project
 RUN python3 -m pip install --upgrade pip
 RUN pwd
