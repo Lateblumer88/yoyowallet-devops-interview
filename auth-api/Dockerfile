@@ -1,4 +1,4 @@
-FROM python:3.6.1-alpine
+FROM python:3.6
 RUN python3 -m pip install --upgrade pip
 RUN pwd
 COPY **/*requirements.txt ./
