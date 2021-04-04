@@ -1,4 +1,4 @@
-FROM python:3.6.0
+FROM python:3.6.1
 RUN python3 -m pip install --upgrade pip
 RUN python -m pip install --upgrade pip
 RUN pwd
