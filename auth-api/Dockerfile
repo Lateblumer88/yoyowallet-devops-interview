@@ -4,7 +4,8 @@ FROM python:3.6.1-alpine
 RUN python3 -m pip install --upgrade pip
 #COPY /var/lib/jenkins/workspace/YOYO-devops-interview-auth-api/auth-api/requirements.txt  /requirements.txt
 #RUN ls
-RUN pip3 install -r /var/lib/jenkins/workspace/YOYO-devops-interview-auth-api/auth-api/requirements.txt
+COPY requirements.txt /tmp/
+RUN pip3 install -r /tmp/requirements.txt
 RUN export HTTP_PORT=5000
 RUN export JWT_SECRET=supersecret
 CMD ["python","run.py"]
