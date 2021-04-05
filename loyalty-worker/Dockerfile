@@ -7,4 +7,5 @@ RUN export HTTP_PORT=5002
 RUN export REDIS_URL=redis://127.0.0.1:6379/0
 ENV HTTP_PORT=5002
 ENV REDIS_URL=redis://127.0.0.1:6379/0
+ENV JWT_SECRET=supersecret
 CMD ["python","run.py"]
