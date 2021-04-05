@@ -5,6 +5,6 @@ COPY **/*run.py ./
 RUN pip3 install -r ./requirements.txt
 RUN export HTTP_PORT=5002
 RUN export REDIS_URL=redis://127.0.0.1:6379/0
-ENV HTTP_PORT=5000
+ENV HTTP_PORT=5002
 ENV REDIS_URL=redis://127.0.0.1:6379/0
 CMD ["python","run.py"]
