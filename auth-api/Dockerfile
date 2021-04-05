@@ -7,7 +7,7 @@ COPY **/*run.py ./
 RUN pip3 install pyjwt
 RUN pip3 install jwt
 RUN pip3 install -r ./requirements.txt
-RUN export HTTP_PORT=5000
+RUN export HTTP_PORT=5001
 RUN export JWT_SECRET=supersecret
 ENV HTTP_PORT=5000
 ENV JWT_SECRET=supersecret

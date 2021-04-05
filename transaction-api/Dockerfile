@@ -3,7 +3,10 @@ RUN python3 -m pip install --upgrade pip
 COPY **/*requirements.txt ./
 COPY **/*run.py ./
 RUN pip3 install -r ./requirements.txt
-RUN export HTTP_PORT=5000
+RUN export HTTP_PORT=5003
 RUN export REDIS_URL=redis://127.0.0.1:6379/0
 RUN export JWT_SECRET=supersecret
+ENV REDIS_URL=redis://127.0.0.1:6379/0
+ENV HTTP_PORT=5000
+ENV JWT_SECRET=supersecret
 CMD ["python","run.py"]
